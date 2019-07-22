@@ -1,0 +1,1 @@
+Model of coarsening for drops with a preferred (equilibrium radius), originally started in January 2018 but pushed aside until now. The difference between this model and classic coarsening is that instead of droplets trying to grow as large as possible, they want to grow to some equilibrium radius, after which they stop growing.
