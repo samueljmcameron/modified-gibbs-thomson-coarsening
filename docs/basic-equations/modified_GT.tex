@@ -1,0 +1,317 @@
+\documentclass[12pt]{article}
+%\usepackage{helvet}
+%\renewcommand{\familydefault}{\sfdefault}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{fullpage}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{gensymb}
+\usepackage[nottoc,numbib]{tocbibind}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{braket}
+\usepackage{titlesec}
+\usepackage{siunitx}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usepackage[font={small}]{caption}
+\usepackage{subcaption}
+%\titlespacing*{\section}{0pt}{4pt}{4pt}
+\usepackage[letterpaper, margin=2cm]{geometry}
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+\DeclareSIUnit\Molar{\textsc{m}}
+\DeclareMathOperator*{\MAXVAL}{max}
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}
+\tikzstyle{place}=[circle,draw,fill,thick,inner sep = 0pt,minimum size = 1.5mm]
+\tikzstyle{theline}=[line width = 1pt]
+
+
+\begin{document}
+\pagenumbering{arabic}
+\spacing{1.5}
+
+%%%%%%%%%%%
+% Begin Document
+%%%%%%%%%%%
+\section{Generalized Gibbs-Thomson boundary condition}
+This derivation follows section 8.3.3 of \cite{Doi_Ch8}. My goal is to derive the boundary condition between a droplet of A-rich solution with concentration $c_a$ and radius $R$ in a sea of B-rich solution with concentration $c_b$. Note that I am assuming that $\phi(\bm{r},t)$ does not change anymore in the domains (it stays fixed at $c_a$ and $c_b$ within the A-rich and B-rich phases, respectively), only the size of the domains change. This assumption requires us to be working in the late-stage regime of phase separation. A schematic of the problem for a single droplet is shown in Figure \ref{fig:single_drop}.
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[t]{0.45\textwidth}
+		\includegraphics[width=\textwidth]{"A_in_B_sea".png}
+		\caption{}
+		\label{fig:ABsea}
+	\end{subfigure}\qquad%
+	\begin{subfigure}[t]{0.45\textwidth}
+		\includegraphics[width=\textwidth]{"R_independent_f".png}
+		\caption{}
+		\label{fig:f_phi}
+	\end{subfigure}
+	\caption{(\protect\subref{fig:ABsea}) Geometry of the problem considered in the limit of only a single ($d$-dimensional) spherical droplet of A-rich phase in a sea of B-rich phase. (\protect\subref{fig:f_phi}) Typical form of the free energy density when no internal structure of the phases are taken into account. Taken from \cite{Doi_Ch8}.}
+\end{figure}\label{fig:single_drop}
+
+When a droplet has a non-constant bulk free energy per unit volume for a given radius, it must be taken into account when considering it's growth dynamics. We are considering the case in which our droplet is a non-cross-linked liquid crystal (surface) phase, with a total volume of a $d$-dimensional sphere. Molecules from the B-rich (A-rich) phase are free to diffuse into (out of) the liquid crystal phase, increasing (decreasing) the radius $R$.
+
+Suppose that the bulk free energy of a single droplet of radius $R$ and concentration $c_a$ is $F_d(R,c_a)$ (for a homogeneous liquid droplet, $F_d(R,c_a)=v_dR^df(c_a)$, but in general can have a more intricate dependence on $R$). If the free energy density of the surrounding majority phase with concentration $c_b$ is $f(c_b)$, then for $N$ droplets, the total free energy of the system (droplets + majority phase solution) is
+\begin{equation}\label{eq:FE1}
+F=NF_d+(V-Nv_dR^d)f(c_b)+Na_dR^{d-1}\gamma,
+\end{equation}
+where $\gamma$ is the surface tension between a droplet and the solution. To simplify notation, I'll include the surface term in droplet free energy, and define
+\begin{equation}\label{eq:FE2}
+F=Nv_dR^dE(R,c_a)+(V-Nv_dR^d)f(c_b),
+\end{equation}
+and
+\begin{equation}\label{eq:E_R}
+E(R,c_a)=\frac{1}{v_dR^d}\left[F_d(R,c_a)+a_dR^{d-1}\gamma\right]
+\end{equation}
+is the free energy per unit volume of a single droplet. Eqn \ref{eq:FE2} must be minimized subject to the constraint
+\begin{equation}\label{eq:N_s}
+g(R,N,c_a,c_b)=Nv_dR^dc_a+(V-Nv_dR^d)c_b-N_s=0,
+\end{equation}
+which states that the solute ($A$-component) number $N_s$ must remain constant in the system. For the system in equilibrium, the constrained free energy is a minimum, i.e.
+\begin{align}
+&\frac{\partial [F-\lambda g(R,n,c_a,c_b)]}{\partial c_a} = 0\label{eq:min_wrt_a},\\
+&\frac{\partial [F-\lambda g(R,n,c_a,c_b)]}{\partial c_b} = 0\label{eq:min_wrt_b},\\
+&\frac{\partial [F-\lambda g(R,n,c_a,c_b)]}{\partial R} = 0\label{eq:min_wrt_R},\\
+&\frac{\partial [F-\lambda g(R,n,c_a,c_b)]}{\partial N} = 0\label{eq:min_wrt_N}.\\
+\end{align}
+The first two equations give the result
+\begin{equation}\label{eq:phi_mins_eq}
+\lambda=\frac{\partial E}{\partial c_a}=\frac{\partial f}{\partial c_b}.
+\end{equation}
+The minimization with respect to $R$ (and using eqn \ref{eq:phi_mins_eq}) results in the equation
+\begin{equation}\label{eq:R_min_eq}
+\frac{\partial f}{\partial c_b}=\frac{1}{c_a-c_b}\left[E(R,c_a)+\frac{R}{d}\frac{\partial E}{\partial R}-f(c_b)\right].
+\end{equation}
+Through the minimization of the number of fibrils, eqns \ref{eq:min_wrt_a}, \ref{eq:min_wrt_b}, and \ref{eq:min_wrt_N} give the final equation
+\begin{equation}\label{eq:N_min_eq}
+\frac{\partial f}{\partial c_b}=\frac{1}{c_a-c_b}\left[E(R,c_a)-f(c_b)\right].
+\end{equation}
+
+Solving these equations gives the expected result that the equilibrium droplet distribution is given by the condition
+\begin{equation}\label{eq:bulk_FE0}
+\left.\frac{\partial E}{\partial R}\right|_{R=R_{\text{eq}}}=0,
+\end{equation}
+where $R_{\text{eq}}$ is the equilibrium droplet size.
+and the concentrations within the two phases $c_a$ and $c_b$, as well as the number of droplets in the system per unit volume is given by eqns \ref{eq:phi_mins_eq}, \ref{eq:N_min_eq}, along with the constraint eqn \ref{eq:N_s} (for a prescribed number of solute molecules $N_s$ and system size $V$).
+
+\section{Quadratic free energy Gibbs-Thomson}
+For the purposes of the simulation, we want to determine the Gibbs-Thomson boundary condition for a given number of droplets, and have the dynamics drive the system to $n_{\text{eq}}$. Therefore, we hold $n$ constant when minimizing the constrained free energy, which means the condition of eqn \ref{eq:n_min_eq} is no applicable. The change in concentration near each droplet from being out of equilibrium is then
+\begin{align}\label{eq:GT}
+\delta c_b&=\frac{1}{(c_a-c_b)f''(c_b)}\left[E(R,c_a)+\frac{R}{d}\frac{\partial E}{\partial R}-E(R_{\text{eq}},c_a)-\left.\frac{\partial E}{\partial R}\right|_{R=R_{\text{eq}}}\right]\nonumber\\
+&=\frac{1}{(c_a-c_b)f''(c_b)}\left[E(R,c_a)+\frac{R}{d}\frac{\partial E}{\partial R}-E(R_{\text{eq}},c_a)\right].
+\end{align}
+
+If I take the free energy per unit volume of the system to be
+\begin{equation}\label{eq:E_per_V}
+E(R,c_a)=E(R_{\text{eq}},c_a)+\frac{1}{2}\left.\frac{\partial^2 E}{\partial R^2}\right|_{R=R_{\text{eq}}}(R-R_{\text{eq}})^2
+\end{equation}
+(compared to the standard, liquid droplet form of $E_l(R)=f(c_a)+a_d\gamma (v_dR)^{-1}$), then the Gibbs-Thomson boundary condition becomes
+\begin{equation}\label{eq:GT_quad_dim}
+\delta c_b=\frac{E''(R_{\text{eq}})}{2(c_a-c_b)f''(c_b)}\left(\frac{d+2}{d}R-R_{\text{eq}}\right)(R-R_{\text{eq}}).
+\end{equation}
+To get this into the dimensionless form necessary for the calculations, I start off by defining the capillary length and characteristic time,
+\begin{equation}\label{eq:capillary}
+l_c^{-2} = \frac{E''(R_{\text{eq}})}{2c_b(c_a-c_b)f''(c_b)}
+\end{equation}
+\begin{equation}\label{eq:c_time}
+t_c=\frac{l_c^2c_a}{Dc_b},
+\end{equation}
+respectively. Here, $D$ is the diffusion coefficient.
+
+\section{LSW theory with the quadratic Gibbs-Thomson boundary condition}
+The number of solute molecules in a droplet is $c_av_dR^d$. If we assume the flux of particles into/out of the droplet at the interface is given by $\bm{j}(r=R)=-D\partial c/\partial r\lvert_{r=R}\hat{\bm{r}}$, then conservation of solute locally says
+\begin{align}\label{eq:local_cons1}
+\frac{d (c_av_dR^d)}{dt}&=-\int_S \bm{j}\cdot \bm{n} dS\nonumber\\
+&=Da_dR^{d-1}\left.\frac{\partial c}{\partial r}\right|_{r=R}.
+\end{align}
+
+Assuming the concentration obeys steady state diffusion in the bulk $\nabla^2c=0$, the concentration field can be approximated as (in $d=3$)
+\begin{equation}\label{eq:c_field}
+c(r)=\bar{c}-\frac{[\bar{c}-c(R)]R}{r},
+\end{equation}
+where $c(R)$ is the concentration at the surface of the droplet (in equilibrium, $c(R)=c_b$), and $\bar{c}$ is the concentration far from the droplets (in equilibrium, $\bar{c}=c_b$). Inserting this into eqn \ref{eq:local_cons1} gives
+\begin{equation}\label{eq:dimensional_LSW}
+c_a\frac{dR}{dt}=\frac{D}{R}[\bar{c}-c(R)].
+\end{equation}
+If I define the supersaturation as $\chi(t)=(\bar{c}-c_b)/c_b$, and note that $c(R)-c_b=\delta c_b$, which is the Gibbs-Thomson effect of eqn \ref{eq:GT_quad_dim}, and re-write $R/l_c\to R$, $t/t_c\to t$, I get the modified LSW theory
+\begin{equation}\label{eq:Rdot}
+\frac{dR}{dt}=\frac{1}{R}\left[\chi(t)-(5/3R-R_{\text{eq}})(R-R_{\text{eq}})\right].
+\end{equation}
+
+\section{LSW theory with the fitted ``collagen" Gibbs-Thomson boundary condition}
+In this section, I assume a ``collagen" free energy per unit volume of the form
+\begin{equation}\label{eq:colFE}
+E(R)\sim \frac{2\gamma}{R}-\frac{2\gamma}{\alpha R_{\text{eq}}^{1-\alpha}R^{\alpha}}+\frac{1}{2}K_{22}q^2
+\end{equation}
+where $\gamma$ is the surface tension between the droplet (a.k.a. fibril) phase and the surrounding solution, $K_{22}$ is the twist elastic constant, $q$ is the inverse cholesteric pitch, and $\alpha$ is a fitting parameter. We take $\alpha=1/3$ as it gives a reasonable fit to the true free energy density of collagen fibrils. Using the same methods as the previous section with $d=2$, I find that the Gibbs-Thomson boundary condition becomes
+\begin{equation}\label{eq:GT_col}
+\frac{\delta c_b}{c_b}=\frac{2\gamma}{c_b(c_a-c_b)f''(c_b)}\left[\frac{1}{2R}-\left(\frac{1}{\alpha}-\frac{1}{2}\right)\frac{1}{R_{\text{eq}}^{1-\alpha}R^{\alpha}}-\frac{1}{R_{\text{eq}}}\left(1-\frac{1}{\alpha}\right)\right]
+\end{equation}
+
+In this case, if I define the length scale
+\begin{equation}\label{eq:length_coll}
+l_c\equiv\frac{2\gamma}{c_b(c_a-c_b)f''(c_b)},
+\end{equation}
+and rescale $R$ and $t$ by $l_c$ and $t_c$, I get the modified LSW result
+\begin{equation}\label{eq:Rdot_coll}
+\frac{dR}{dt}=\frac{1}{R}\left[\chi(t)-\frac{1}{2R}+\left(\frac{1}{\alpha}-\frac{1}{2}\right)\frac{1}{R_{\text{eq}}^{1-\alpha}R^{\alpha}}+\frac{1}{R_{\text{eq}}}\left(1-\frac{1}{\alpha}\right)\right].
+\end{equation}
+
+\section{Mass conservation}
+Calculation of LSW theory also requires a mass/number conservation law to determine the time evolution of the supersaturation. The total number of solute molecules in the system $N_s$ is conserved throughout the time evolution. Therefore, $N_s=N_m+N_d$, where $N_m$ is the number of solute molecules in the matrix, and $N_d$ is the number of solute molecules in the droplets. In this calculation I assume that the interfacial width of the droplets shown in Figure \ref{fig:droplet}, $\xi=0$ to simplify things.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\textwidth]{"droplet".pdf}
+	\caption{Concentration near a droplet. Inside the droplet, the concentration is $c_a$. within the interface of the droplet (the area between the inner circle and outer circle, width $\xi$) the concentration is $\delta c_b+c_b$, where $c_b$ is the equilibrium concentration. Far from the droplet, the concentration is $\bar{c}$, which at equilibrium is $c_b$. I take the sharp interface limit $\xi\sim0$ in this calculation.}
+\end{figure}\label{fig:droplet}
+
+In this $\xi=0$ limit, conservation of solute number gives
+\begin{equation}\label{eq:cons1}
+N_s=\bar{c}\left(V-v_d\sum_{i=1}^NR_i^d\right)+c_av_d\sum_{i=1}^NR_i^d.
+\end{equation}
+Rearranging this equation, taking the derivative of $\bar{c}$ with respect to $t$, and noting $\partial\bar{c}/\partial t = c_b\partial \chi(t)/\partial t$, I get
+\begin{equation}\label{eq:cons2}
+c_b\frac{\partial\chi}{\partial t}=\left[\frac{-c_aV+N_s}{\left(V-v_d\sum_{i=1}^NR_i^d\right)^2}\right]dv_d\sum_{i=1}^NR_i^{d-1}\frac{\partial R_i}{\partial t}.
+\end{equation}
+Defining $\alpha\equiv N_s/(Vc_a)$, $\beta=c_a/c_b$, and rescaling the length and time of the system by $l_c$ and $t_c$ respectively, the evolution equation of the supersaturation is
+\begin{equation}\label{eq:ss_evolution}
+\frac{\partial\chi}{\partial t}=\beta\frac{(\alpha-1)}{\left(1-\frac{v_d}{V}\sum_{i=1}^NR_i^d\right)^2}\frac{dv_d}{V}\sum_{i=1}^NR_i^{d-1}\frac{\partial R_i}{\partial t}.
+\end{equation}
+Since we are assuming that in equilibrium, the solute is more concentrated in the minority phase, the parameters $\alpha<1$ and $\beta>1$. $\alpha\geq1$ corresponds to a solution starting with $\bar{c}\geq c_a$, which would physically correspond to a supersaturation too high to maintain droplets at concentration $c_a$ (i.e. the whole system would become a supersaturated "droplet" phase). With the definitions $\alpha$ and $\beta$, the conservation law eqn \ref{eq:cons1} becomes in dimensionless form
+\begin{equation}\label{eq:rescaled_cons}
+\alpha=\frac{(1+\chi(t))}{\beta}\left(1-\frac{v_d}{V}\sum_{i=1}^NR_i^d\right)+\frac{v_d}{V}\sum_{i=1}^NR_i^d.
+\end{equation}
+This can also be rearranged to specify the initial fraction of the system volume which starts in droplet form, if I define
+\begin{equation}\label{eq:minority_fraction}
+\phi_0=\frac{\alpha-\frac{(1+\chi)}{\beta}}{1-\frac{(1+\chi)}{\beta}}
+\end{equation}
+as the initial volume fraction of the minority phase.
+\section{Multi-droplet equation (non-zero volume fraction limit)}
+For the case of multiple droplets, the PDE
+\begin{equation}\label{eq:dimensional_diff}
+\nabla^2c=a_d\sum_{i=1}^NQ_i\delta(\bm{r}-\bm{r}_i)
+\end{equation}
+describes the diffusion field, treating each droplet as a source or sink with strength $Q_i$. Similar to the single droplet case of eqn \ref{eq:local_cons1}, using fick's law $\bm{j}=-D\nabla c$ and the divergence theorem, I can write the local conservation law as
+\begin{equation}\label{eq:local_cons2}
+R_i^{d-1}\frac{d R_i}{d t}=\frac{D}{c_a}Q_i.
+\end{equation}
+If I define $\theta(\tilde{\bm{r}},\tilde{t})=(c(\bm{r},t)-c_b)/c_b$ ($\tilde{r}=r/l_c$, $\tilde{t}=t/t_c$), and re-write eqn \ref{eq:dimensional_diff} in dimensionless form, I get the dimensionless diffusion equation
+\begin{equation}\label{eq:dimensionless_diff}
+\nabla^2\theta=a_d\sum_{i=1}^NB_i\delta(\bm{r}-\bm{r}_i)
+\end{equation}
+where I have written everything in terms of dimensionless variables (e.g. $r/l_c\to r$), and $B_i = Q_il_c^{2-d}/c_b$. Therefore, in dimensionless form the local conservation law becomes
+\begin{equation}\label{eq:local_cons3}
+R_i^{d-1}\frac{dR_i}{dt}=B_i.
+\end{equation}
+Note that with this result, the supersaturation evolution equation becomes
+\begin{equation}\label{eq:ss_evolution2}
+\frac{\partial\chi}{\partial t}=\beta\frac{(\alpha-1)}{\left(1-\frac{v_d}{V}\sum_{i=1}^NR_i^d\right)^2}\frac{dv_d}{V}\sum_{i=1}^NB_i
+\end{equation}
+Solving eqn \ref{eq:dimensionless_diff} with the condition $\lim_{r\to\infty}\theta(\bm{r},t)=\chi(t)$, introducing a monopole approximation, and implementing the quadratic Gibbs-Thomson boundary condition (eqn \ref{eq:GT_quad_dim}), I get the equation (in $d=3$)
+\begin{equation}\label{eq:system_of_eqns_Bi}
+\left(\frac{5}{3}R_j-R_{\text{eq}}\right)(R_j-R_{\text{eq}})=\chi(t)-\frac{B_j}{R_j}-\sum_{i\neq j}^N\frac{B_i}{\left|\bm{r}_j-\bm{r}_i\right|}.
+\end{equation}
+In $d=2$, the equations are of the form
+\begin{equation}\label{eq:system_of_eqns_Bi_2d}
+\left(2R_j-R_{\text{eq}}\right)(R_j-R_{\text{eq}})=\chi(t)+B_j\log\left(\frac{R_j}{L}\right)+\sum_{i\neq j}^NB_i\log\left(\frac{\left|\bm{r}_j-\bm{r}_i\right|}{L}\right).
+\end{equation}
+
+\section{Simulation details}
+In order to simulate the growth/shrinking of these droplets, I start by specifying the distribution of radii $\{R_i\}$, and the initial supersaturation $\chi(0)$. I also have two more degrees of freedom, $\alpha=N_s/(Vc_a)<1$ and $\beta=c_a/c_b>1$. Note that there is a limited range of $\chi(0)$ values which can be specified before $\alpha$ becomes too large (i.e. larger than 1). The inequality $\beta>1+\chi(t)$ must be satisfied to prevent this from occurring. For simplicity of interpretation, I will choose also to work with the initial minority volume fraction $\phi_0$ of the droplet phase and the ratio of concentrations within the droplet and equilibrium bulk phases $\beta$ ($\alpha$ can then be determined via eqn \ref{eq:minority_fraction}). I will take $d=3$ below, but the same thing applies to the $d=2$ case, just using eqn \ref{eq:system_of_eqns_Bi_2d} instead of eqn \ref{eq:system_of_eqns_Bi}.
+
+\subsection{numerical scheme 1}
+Given the initial values $R_i$ and $\chi(0)$, I can calculate the $B_i$ of eqn \ref{eq:system_of_eqns_Bi} by inverting an $(N+1)\times (N+1)$ matrix, which is given by
+\begin{align}\label{eq:matrix_Nside}
+\begin{bmatrix}
+\left(\frac{5}{3}R_1-R_{\text{eq}}\right)(R_1-R_{\text{eq}}) \\
+\left(\frac{5}{3}R_2-R_{\text{eq}}\right)(R_2-R_{\text{eq}}) \\
+\left(\frac{5}{3}R_3-R_{\text{eq}}\right)(R_3-R_{\text{eq}}) \\
+\cdot \\
+\cdot \\
+\chi(t-dt) 
+\end{bmatrix}=
+\begin{bmatrix}
+\frac{-1}{R_1} & \frac{-1}{|\bm{r}_1-\bm{r}_2|} & \frac{-1}{|\bm{r}_1-\bm{r}_3|} & \cdots & 1 \\
+\frac{-1}{|\bm{r}_1-\bm{r}_2|} & \frac{-1}{R_2} & \frac{-1}{|\bm{r}_2-\bm{r}_3|} & \cdots & 1 \\
+\frac{-1}{|\bm{r}_1-\bm{r}_3|} & \frac{-1}{|\bm{r}_2-\bm{r}_3|} & \frac{-1}{R_3} & \cdots & 1 \\
+\cdot & \cdot &\cdot & \cdots & \cdot \\
+\cdot & \cdot &\cdot & \cdots & \cdot \\
+-dt\mathcal{A} & -dt\mathcal{A} & \cdots & \cdots & 1
+\end{bmatrix}
+\begin{bmatrix}
+B_1 \\
+B_2 \\
+B_3 \\
+\cdot \\
+\cdot \\
+\chi(t)
+\end{bmatrix}.
+\end{align}
+Here, I have included the supersaturation calculation at time $t$ within the calculation of the $B_i$ values (through discretization of eqn \ref{eq:ss_evolution}). $\mathcal{A}$ is the right hand side of eqn \ref{eq:ss_evolution2} without the summation term. Note that the $dt$ value here is the last time step value, and so $dt=0$ at $t=0$.
+
+Once the values of the source and sink terms $B_i$ are calculated, the smallest time step at which only a single droplet shrinks is calculated by discretizing eqn \ref{eq:local_cons3}, and setting $R_i^d(t+dt)=0$, and then chosen if it is below some threshold time step $dt_{\text{max}}$, i.e.
+\begin{equation}\label{eq:min_step}
+dt=\min_{i\:s.t.\: B_i<0}\left\{\frac{-R_i^d}{B_i d},dt_{\text{max}}\right\}.
+\end{equation}
+Finally, the radii are updated using eqn \ref{eq:local_cons3}. This process is then repeated.
+
+\subsection{numerical schemes 2a and 2b}
+
+Given the initial values $R_i$ and $\chi(0)$, I can calculate the $B_i$ of eqn \ref{eq:system_of_eqns_Bi} by inverting an $N\times N$ matrix, which is given by
+\begin{align}\label{eq:matrix_Nside}
+\begin{bmatrix}
+\left(\frac{5}{3}R_1-R_{\text{eq}}\right)(R_1-R_{\text{eq}})-\chi(t) \\
+\left(\frac{5}{3}R_2-R_{\text{eq}}\right)(R_2-R_{\text{eq}})-\chi(t) \\
+\left(\frac{5}{3}R_3-R_{\text{eq}}\right)(R_3-R_{\text{eq}})-\chi(t) \\
+\cdot \\
+\cdot \\
+\left(\frac{5}{3}R_N-R_{\text{eq}}\right)(R_N-R_{\text{eq}})-\chi(t) \\
+\end{bmatrix}=
+\begin{bmatrix}
+\frac{-1}{R_1} & \frac{-1}{|\bm{r}_1-\bm{r}_2|} & \frac{-1}{|\bm{r}_1-\bm{r}_3|} & \cdots & \frac{-1}{|\bm{r}_1-\bm{r}_N|}\\
+\frac{-1}{|\bm{r}_1-\bm{r}_2|} & \frac{-1}{R_2} & \frac{-1}{|\bm{r}_2-\bm{r}_3|} & \cdots & \frac{-1}{|\bm{r}_2-\bm{r}_N|}\\
+\frac{-1}{|\bm{r}_1-\bm{r}_3|} & \frac{-1}{|\bm{r}_2-\bm{r}_3|} & \frac{-1}{R_3} & \cdots  & \frac{-1}{|\bm{r}_3-\bm{r}_N|}\\
+\cdot & \cdot &\cdot & \cdots & \cdot \\
+\cdot & \cdot &\cdot & \cdots & \cdot \\
+\frac{-1}{|\bm{r}_1-\bm{r}_N|} & \frac{-1}{|\bm{r}_2-\bm{r}_N|} & \frac{-1}{|\bm{r}_3-\bm{r}_N|} & \cdots  & \frac{-1}{R_N}\\
+\end{bmatrix}
+\begin{bmatrix}
+B_1 \\
+B_2 \\
+B_3 \\
+\cdot \\
+\cdot \\
+B_N
+\end{bmatrix}.
+\end{align}
+Here, I have included the supersaturation calculation at time $t$ within the calculation of the $B_i$ values (through discretization of eqn \ref{eq:ss_evolution}), which should allow for conservation of solute regardless of time step size. $\mathcal{A}$ is the right hand side of eqn \ref{eq:ss_evolution} without the summation term. Note that the $dt$ value here is the last time step value, and so $dt=0$ at $t=0$.
+
+\subsubsection{2a}
+Once the values of the source and sink terms $B_i$ are calculated, the smallest time step at which only a single droplet shrinks is calculated by discretizing eqn \ref{eq:local_cons3}, and setting $R_i^d(t+dt)=0$, and then chosen if it is below some threshold time step $dt_{\text{max}}$, i.e.
+\begin{equation}\label{eq:min_step}
+dt=\min_{i\:s.t.\: B_i<0}\left\{\frac{-R_i^d}{B_i d},dt_{\text{max}}\right\}.
+\end{equation}
+Finally, the supersaturation and radii are updated using eqns \ref{eq:local_cons3} and \ref{eq:ss_evolution2}, respectively. This process is then repeated.
+
+\subsubsection{2b}
+Once the values of the source and sink terms $B_i$ are calculated, the smallest time step at which only a single droplet shrinks is calculated by discretizing eqn \ref{eq:local_cons3}, and setting $R_i^d(t+dt)=0$, and then chosen if it is below some threshold time step $dt_{\text{max}}$, i.e.
+\begin{equation}\label{eq:min_step}
+dt=\min_{i\:s.t.\: B_i<0}\left\{\frac{-R_i^d}{B_i d},dt_{\text{max}}\right\}.
+\end{equation}
+The radii are updated using eqns \ref{eq:local_cons3}. Finally, the supersaturation is updated using eqn \ref{eq:rescaled_cons}. This process is then repeated.
+
+
+%%%%%%%%%%%%%%%
+% Bibliography
+%%%%%%%%%%%%%%%
+\clearpage
+\bibliography{modified_GT}
+\bibliographystyle{unsrt}
+
+\end{document}

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "headerfile.h"
 
 double compute_alpha(double beta, double init_volFrac,double chi)
@@ -18,3 +19,39 @@ double change_in_alpha(double drop_volume,double chi, double alpha,
 
   return alpha-new_alpha;
 }
+
+
+double set_L_sys(double init_volFrac, double *R, int n)
+{
+  int i;
+  double sum = 0;
+
+  for (i = 0; i < n; i++) sum += R[i]*R[i]*R[i];
+
+  return cbrt(4*M_PI/3.0*sum/init_volFrac);
+}
+
+
+
+double totalVolume(double *R, int n)
+{
+  int i;
+  double sum = 0;
+
+  for (i = 0; i < n; i++) sum += R[i]*R[i]*R[i];
+
+  return sum*4.0*M_PI/3.0;
+
+}
+
+double volumeFraction_in_drops(double *R,double L_sys,int n)
+{
+  int i;
+  double sum = 0;
+
+  for (i = 0; i < n; i++) sum += R[i]*R[i]*R[i];
+
+  return sum*4.0*M_PI/3.0/(L_sys*L_sys*L_sys);
+
+}
+
