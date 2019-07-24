@@ -1,0 +1,10 @@
+R_avg0		6.0
+sigma_Ravg0	0.0
+R_eq		10.0
+volFrac_0	0.01
+beta		8.0
+chi_0		0.0
+N		1000
+dt_max		0.1
+t_final		4000.0
+t_intervals	20

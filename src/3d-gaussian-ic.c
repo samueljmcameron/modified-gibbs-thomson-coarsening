@@ -27,7 +27,7 @@ int main(int argc, char **argv)
 
   void build_tvals(double *tvals, double t_final,int t_intervals);
 
-  void delta_distribution(double *R,double R_avg,int N);
+  void gaussian_distribution(double *R, double R_avg, double sigma_Ravg,int N,gsl_rng *RNG);
 
   void generateBasis(double *basis_matrix,double *R,double L_sys, double buffer, int N,
 		     gsl_rng *RNG);
@@ -135,7 +135,7 @@ int main(int argc, char **argv)
   // initial conditions //
   // Create gaussian distribution of drops around Ravg //
 
-  delta_distribution(R,p.R_avg0,p.N);
+  gaussian_distribution(R,p.R_avg0,p.sigma_Ravg0,p.N,RNG);
 
   double L_sys;                                 // side length of system (V = L_sys^3)
   L_sys = set_L_sys(p.volFrac_0,R,p.N);

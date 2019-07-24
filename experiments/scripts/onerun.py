@@ -66,6 +66,26 @@ class OneRun(ReadParams):
 
         return
 
+    def delete_file_from_tmp_path(self,mname,warning=True):
+        # move a file from the temporary file folder to the data folder.
+    
+        suffix = self.write_suffix()
+
+        fname = f"{mname}_{suffix}.txt"
+
+        file = f"{self.tmp_path}{fname}"
+
+        if os.path.isfile(file):
+
+            subprocess.run(["rm",file],check=True)
+
+        elif warning:
+
+            print(f"Cannot delete file {file} as it does not exist!")
+
+        return
+
+
     def mv_standard_files(self):
 
         nfiles = int(self.params['t_intervals'])+1
@@ -84,6 +104,26 @@ class OneRun(ReadParams):
             self.mv_file(b_name)
 
         return
+
+    def delete_standard_files_from_tmp_path(self,warning=False):
+
+        nfiles = int(self.params['t_intervals'])+1
+
+        chi_name = "chi_vs_t"
+
+        self.delete_file_from_tmp_path(chi_name,warning=warning)
+
+        for i in range(nfiles):
+
+            r_name = f"radius_{i}"
+            self.delete_file_from_tmp_path(r_name,warning=warning)
+
+            b_name = f"basis_{i}"
+
+            self.delete_file_from_tmp_path(b_name,warning=warning)
+
+        return
+
 
 
 """

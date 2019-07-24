@@ -6,7 +6,7 @@
 
 #define MCHN_ERR 1e-15
 
-void gaussianDistribution(double *R, double R_avg, double sigma_Ravg,int N,gsl_rng *RNG)
+void gaussian_distribution(double *R, double R_avg, double sigma_Ravg,int N,gsl_rng *RNG)
 {
 
   void delta_distribution(double *R,double R_avg,int N);
