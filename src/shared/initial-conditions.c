@@ -2,20 +2,32 @@
 #include <math.h>
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_randist.h>
-#include "headerfile.h"
+
+
+#define MCHN_ERR 1e-15
 
 void gaussianDistribution(double *R, double R_avg, double sigma_Ravg,int N,gsl_rng *RNG)
 {
 
-  for (int i = 0; i < N; i++) {
-    R[i] = gsl_ran_gaussian(RNG,sigma_Ravg)+R_avg;
-    while (R[i] <= 0) R[i] = gsl_ran_gaussian(RNG,sigma_Ravg)+R_avg;
+  void delta_distribution(double *R,double R_avg,int N);
+
+  if (fabs(sigma_Ravg)<MCHN_ERR) {
+
+    delta_distribution(R,R_avg,N);
+
+  } else {
+  
+    for (int i = 0; i < N; i++) {
+      R[i] = gsl_ran_gaussian(RNG,sigma_Ravg)+R_avg;
+      while (R[i] <= 0) R[i] = gsl_ran_gaussian(RNG,sigma_Ravg)+R_avg;
+    }
+    
   }
 
   return;
 }
 
-void onevalue_distribution(double *R,double R_avg,int N)
+void delta_distribution(double *R,double R_avg,int N)
 {
   int i;
 

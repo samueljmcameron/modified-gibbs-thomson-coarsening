@@ -23,7 +23,7 @@ class OneRun(ReadParams):
                           "chi_0"],
                  savesuf=["R_avg0","sigma_Ravg0","R_eq","volFrac_0","beta",
                           "chi_0"],
-                 executable="../../../bin/3d-growth-onerun"):
+                 executable="../../../bin/3d-gaussian-ic"):
 
         ReadParams.__init__(self,datfile=datfile,
                             scan=scan,loadsuf=loadsuf,savesuf=savesuf)

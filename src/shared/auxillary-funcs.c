@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "headerfile.h"
+#include "../headerfile.h"
 
 
 
@@ -98,7 +98,9 @@ unsigned long int generate_seed(void)
   unsigned long int randval;
   FILE *seedFile;
   seedFile = fopen("/dev/urandom","r");
-  fread(&randval,sizeof(randval),1,seedFile);
+  
+  int CHECK = fread(&randval,sizeof(randval),1,seedFile);
+  
   fclose(seedFile);
 
 

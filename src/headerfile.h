@@ -39,6 +39,8 @@ void build_tvals(double *tvals, double t_final,int t_intervals);
 
 void gaussianDistribution(double *R, double R_avg, double sigma_Ravg,int N,gsl_rng *RNG);
 
+void delta_distribution(double *R,double R_avg,int N);
+
 void generateBasis(double *basis_matrix,double *R,double L_sys, double buffer, int N,
 		   gsl_rng *RNG);
 

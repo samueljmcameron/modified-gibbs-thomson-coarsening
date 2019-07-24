@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "headerfile.h"
 
 double compute_alpha(double beta, double init_volFrac,double chi)
 {
