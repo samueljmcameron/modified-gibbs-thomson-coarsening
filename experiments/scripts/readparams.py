@@ -1,3 +1,5 @@
+import numpy as np
+
 
 class ReadParams(object):
 
@@ -62,3 +64,22 @@ class ReadParams(object):
         
         return suffix
 
+    def list_of_t_vals(self,second_t_val = 1.0):
+
+        t0 = second_t_val
+
+        t_len = int(self.params['t_intervals'])+1
+
+        t_final = float(self.params['t_final'])
+
+        ts = np.empty([t_len],float)
+
+        ts[0] = 0.0
+
+        exp10_t0 = np.log10(second_t_val)
+        
+        exp10_tf = np.log10(t_final)
+        
+        ts[1:] = np.logspace(0,np.log10(t_final),num=t_len-1,endpoint=True)
+
+        return ts

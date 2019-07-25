@@ -6,11 +6,12 @@
 
 
 void save_basis(char *path,int jset,
-		double *basis_matrix,double L_sys, int n,int overlap,
+		double *basis_matrix,double L_sys, int n,bool overlap,
 		struct params p)
 {
 
-  void initialize_file(FILE **output,char *path,char *fname,struct params p);
+  void initialize_file(FILE **output,char *path,char *fname,struct params p,
+		       bool overlap);
 
   FILE *basis_file;
   
@@ -23,16 +24,9 @@ void save_basis(char *path,int jset,
 
 
   // open file for BASIS positions//    
-  if (overlap) {
 
-
-    snprintf(fname,sizeof(fname),"basis-overlap_%d",jset);
-  }
-  else {
-
-    snprintf(fname,sizeof(fname),"basis_%d",jset);
-  }
-  initialize_file(&basis_file,path,fname,p);
+  snprintf(fname,sizeof(fname),"basis_%d",jset);
+  initialize_file(&basis_file,path,fname,p,overlap);
   fprintf(basis_file,"# system size length scale L_sys = %6.6e\n",L_sys);
   fprintf(basis_file,"#%*s\t%*s\t%*s\n",precision+6,xs,precision+6,ys,
 	  precision+6,zs);
@@ -48,10 +42,11 @@ void save_basis(char *path,int jset,
 }
 
 void save_Rdistribution(char *path,int jset,double *R,double *R_last,
-			double dt,int n,int overlap,struct params p)
+			double dt,int n,bool overlap,struct params p)
 {
 
-  void initialize_file(FILE **output,char *path,char *fname,struct params p);
+  void initialize_file(FILE **output,char *path,char *fname,struct params p,
+		       bool overlap);
 
   FILE *R_file;
 
@@ -59,15 +54,9 @@ void save_Rdistribution(char *path,int jset,double *R,double *R_last,
 
   char fname[100];
 
-  if (overlap) {
-    snprintf(fname,sizeof(fname),"radius-overlap_%d",jset);
-  }
-  else {
-    snprintf(fname,sizeof(fname),"radius_%d",jset);
-  }
+  snprintf(fname,sizeof(fname),"radius_%d",jset);
 
-  printf("fine to here.\n");
-  initialize_file(&R_file,path,fname,p);
+  initialize_file(&R_file,path,fname,p,overlap);
 
   fprintf(R_file,"#dt=%.12e\n",dt);
   fprintf(R_file,"# tau_crslnk = inf\n");
@@ -183,16 +172,27 @@ void print_params(struct params *p)
 
 
 
-void initialize_file(FILE **output,char *path,char *fname,struct params p)
+void initialize_file(FILE **output,char *path,char *fname,struct params p,
+		     bool overlap)
 {
 
   int num_chars = 400;
   char suffix[num_chars];
   char f[num_chars];
 
-  snprintf(suffix,sizeof(suffix),"%1.4e_%1.4e_%1.4e_%1.4e_%1.4e_"
-	   "%1.4e.txt",p.R_avg0,p.sigma_Ravg0,p.R_eq,
-	   p.volFrac_0,p.beta,p.chi_0);
+  if (overlap) {
+
+    snprintf(suffix,sizeof(suffix),"%1.4e_%1.4e_%1.4e_%1.4e_%1.4e_"
+	     "%1.4e-overlap.txt",p.R_avg0,p.sigma_Ravg0,p.R_eq,
+	     p.volFrac_0,p.beta,p.chi_0);
+  } else {
+
+    snprintf(suffix,sizeof(suffix),"%1.4e_%1.4e_%1.4e_%1.4e_%1.4e_"
+	     "%1.4e.txt",p.R_avg0,p.sigma_Ravg0,p.R_eq,
+	     p.volFrac_0,p.beta,p.chi_0);
+
+  }
+
   snprintf(f,sizeof(f),"%s%s_%s",path,fname,suffix);
 
   *output = fopen(f,"w");

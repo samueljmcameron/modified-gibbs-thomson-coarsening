@@ -8,8 +8,10 @@ sys.path.append('../../scripts/')
 
 from fig_settings import fig_settings
 from loaddata import LoadData
+from readparams import ReadParams
 
 if __name__=="__main__":
+
 
     fig_settings()
 
@@ -21,7 +23,6 @@ if __name__=="__main__":
 
     savesuf = ["R_eq","volFrac_0","beta"]
 
-
     R_avg0s = np.linspace(5,12,num=8,endpoint=True)
 
     sigmas = np.array([0,0.001,0.01,0.1,1.0],float)
@@ -32,7 +33,7 @@ if __name__=="__main__":
 
     scan = {}
 
-    lines = [":","-.","--","-",":"]
+    markers = ["o-","v-","^-","<-",">-"]
 
     for i,R_avg0 in enumerate(R_avg0s):
 
@@ -40,23 +41,37 @@ if __name__=="__main__":
 
         scan['chi_0'] = chi_0(R_avg0)
 
+
+
         for j,sigma in enumerate(sigmas):
 
             scan['sigma_Ravg0'] = str(sigma)
         
-            ld = LoadData(scan = scan,savesuf=savesuf)
+            rp = ReadParams(scan=scan)
 
-            ts = ld.data[:,0]
+            ts = rp.list_of_t_vals()
 
-            chis = ld.data[:,1]
+            sigma_Ravgts = np.empty([len(ts)],float)
 
+
+            for i_t,t in enumerate(ts):
+
+                ld = LoadData(name=f"radius_{i_t}",scan=scan,savesuf=savesuf)
+                
+                Rs = ld.data[:,1]
+
+                sigma_Ravgts[i_t] = Rs.std()
+
+            axarr.flat[i].plot(ts,sigma_Ravgts,markers[j],color=colors[j],
+                               label=rf"$\sigma=\num{{{sigma:.0e}}}$")            
+
+
+
+    
             axarr.flat[i].set_title(rf"$<\,R\,>(t=0)={R_avg0:.1f}$")
-            axarr.flat[i].plot(ts,chis,'-',color=colors[j],linestyle=lines[j],
-                               lw=4,
-                               label=rf"$\sigma(t=0)=\num{{{sigma:.0e}}}$")
 
         axarr.flat[i].set_xlabel(r"$t$")
-        axarr.flat[i].set_ylabel(r"$\chi(t)$")
+        axarr.flat[i].set_ylabel(r"$\sigma(t)$")
 
     axarr.flat[i].legend(frameon=False,handlelength=5)
 
@@ -65,5 +80,4 @@ if __name__=="__main__":
 
     fig.subplots_adjust(bottom = 0.08,top = 0.95,left=0.08,right=0.95)
 
-
-    fig.savefig(ld.file_savename("chi-vs-t"))
+    fig.savefig(ld.file_savename("sigma_Ravg"))

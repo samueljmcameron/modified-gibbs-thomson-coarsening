@@ -38,7 +38,8 @@ int main(int argc, char **argv)
 		    double *R,double L_sys, int N);
 
 
-  void initialize_file(FILE **output,char *path,char *fname,struct params p);
+  void initialize_file(FILE **output,char *path,char *fname,struct params p,
+		       bool overlap);
 
   void set_GibbsThomson(double *c, double *R, double chi,
 			double Req, int n);
@@ -57,10 +58,10 @@ int main(int argc, char **argv)
 			    double beta,double L_sys,int k,int n);
 
   void save_basis(char *path,int jset,double *basis_matrix,double L_sys,
-		  int n,int overlap,struct params p);
+		  int n,bool overlap,struct params p);
 
   void save_Rdistribution(char *path,int jset,double *R,double *R_last,
-			  double dt,int n,int overlap,struct params p);
+			  double dt,int n,bool overlap,struct params p);
 
   void rmv_zero(double *R, double *R_last, int k, int n);
 
@@ -159,7 +160,7 @@ int main(int argc, char **argv)
 
 
 
-  initialize_file(&chi_file,argv[1],"chi_vs_t",p);
+  initialize_file(&chi_file,argv[1],"chi_vs_t",p,overlap);
 
   fprintf(chi_file,"%.12e\t%.12e\n",t,chi);
 

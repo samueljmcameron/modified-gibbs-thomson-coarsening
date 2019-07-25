@@ -33,15 +33,25 @@ class LoadData(ReadParams):
         self.savefilepath = savefilepath
         if os.path.isfile(self.file_name()):
             self.data = np.loadtxt(self.file_name())
+            self.overlap=False
+        elif os.path.isfile(self.file_name(overlap=True)):
+            self.data = np.loadtxt(self.file_name(overlap=True))
+            print(f"Found file {self.file_name()}, but drops are overlapping!")
+            self.overlap=True
         else:
             print(f"Could not find file {self.file_name()}")
+            self.overlap=False
 
         return
         
 
-    def file_name(self):
+    def file_name(self,overlap=False):
     
         suffix = self.write_suffix()
+
+        if overlap:
+            suffix = suffix + "-overlap"
+
 
         fname =f"{self.loadfilepath}/{self.name}_{suffix}.txt"
 
@@ -53,3 +63,4 @@ class LoadData(ReadParams):
         suffix = self.write_suffix(suffix_type="save")
 
         return f"{self.savefilepath}/{varname}_{suffix}.{file_format}"
+
