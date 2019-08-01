@@ -2,6 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 import seaborn as sns
+
+sys.path.append('../../2019-07-24/local-fixed-point-vs-sigma_Ravg0/')
+
 from single_sigma import chi_0
 
 sys.path.append('../../scripts/')
@@ -23,6 +26,13 @@ if __name__=="__main__":
 
     savesuf = ["R_eq","volFrac_0","beta"]
 
+    data_path = "../../2019-07-24/local-fixed-point-vs-sigma_Ravg0"
+
+    loadfilepath = data_path + "/data"
+
+    datfile = data_path + "/data/input.dat"
+
+    
     R_avg0s = np.linspace(5,12,num=8,endpoint=True)
 
     sigmas = np.array([0,0.001,0.01,0.1,1.0],float)
@@ -48,31 +58,45 @@ if __name__=="__main__":
 
             scan['sigma_Ravg0'] = str(sigma)
         
-            rp = ReadParams(scan=scan)
+            rp = ReadParams(scan=scan,datfile=datfile)
 
             ts = rp.list_of_t_vals()
 
-            Ns = np.empty([len(ts)],float)
+            R_avgts = np.empty([len(ts)],float)
+
+            chi_spaced = np.empty([len(ts)],float)
+            
+            ldchi = LoadData(scan=scan,savesuf=savesuf,loadfilepath=loadfilepath,
+                             datfile=datfile)
+
+            t_smalls = ldchi.data[:,0]
+            chis = ldchi.data[:,1]
 
 
             for i_t,t in enumerate(ts):
 
-                ld = LoadData(name=f"radius_{i_t}",scan=scan,savesuf=savesuf)
+                ld = LoadData(name=f"radius_{i_t}",scan=scan,savesuf=savesuf,
+                              loadfilepath=loadfilepath,datfile=datfile)
                 
                 Rs = ld.data[:,1]
 
-                Ns[i_t] = Rs.size
+                R_avgts[i_t] = Rs.mean()
+                
+                chi_spaced[i_t] = chis[t_smalls<=t][-1]
 
-            axarr.flat[i].plot(ts,Ns,markers[j],color=colors[j],
+
+
+            axarr.flat[i].plot(chi_spaced,R_avgts,markers[j],color=colors[j],
                                label=rf"$\sigma=\num{{{sigma:.0e}}}$")            
 
 
 
     
-            axarr.flat[i].set_title(rf"$<\,R\,>(t=0)={R_avg0:.1f}$")
+            axarr.flat[i].set_title(rf"$<\,R\,>(t=0)={R_avg0:.1f}$")            
 
-        axarr.flat[i].set_xlabel(r"$t$")
-        axarr.flat[i].set_ylabel(r"$N(t)$")
+        axarr.flat[i].set_xlabel(r"$\chi(t)$")
+        axarr.flat[i].set_ylabel(r"$<R>(t)$")
+
 
     axarr.flat[i].legend(frameon=False,handlelength=5)
 
@@ -81,4 +105,4 @@ if __name__=="__main__":
 
     fig.subplots_adjust(bottom = 0.08,top = 0.95,left=0.08,right=0.95)
 
-    fig.savefig(ld.file_savename("N"))
+    fig.savefig(ld.file_savename("R_avg-vs-chi"))

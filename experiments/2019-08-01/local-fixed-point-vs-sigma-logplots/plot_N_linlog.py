@@ -2,7 +2,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 import seaborn as sns
+sys.path.append('../../2019-07-24/local-fixed-point-vs-sigma_Ravg0/')
+
 from single_sigma import chi_0
+
 
 sys.path.append('../../scripts/')
 
@@ -22,6 +25,13 @@ if __name__=="__main__":
     colors = sns.color_palette("muted",8)
 
     savesuf = ["R_eq","volFrac_0","beta"]
+
+
+    data_path = "../../2019-07-24/local-fixed-point-vs-sigma_Ravg0"
+
+    loadfilepath = data_path + "/data"
+
+    datfile = data_path + "/data/input.dat"
 
     R_avg0s = np.linspace(5,12,num=8,endpoint=True)
 
@@ -48,7 +58,7 @@ if __name__=="__main__":
 
             scan['sigma_Ravg0'] = str(sigma)
         
-            rp = ReadParams(scan=scan)
+            rp = ReadParams(scan=scan,datfile=datfile)
 
             ts = rp.list_of_t_vals()
 
@@ -57,7 +67,8 @@ if __name__=="__main__":
 
             for i_t,t in enumerate(ts):
 
-                ld = LoadData(name=f"radius_{i_t}",scan=scan,savesuf=savesuf)
+                ld = LoadData(name=f"radius_{i_t}",scan=scan,savesuf=savesuf,
+                              loadfilepath=loadfilepath,datfile=datfile)
                 
                 Rs = ld.data[:,1]
 
@@ -70,6 +81,8 @@ if __name__=="__main__":
 
     
             axarr.flat[i].set_title(rf"$<\,R\,>(t=0)={R_avg0:.1f}$")
+            axarr.flat[i].set_xscale('log')
+
 
         axarr.flat[i].set_xlabel(r"$t$")
         axarr.flat[i].set_ylabel(r"$N(t)$")
@@ -81,4 +94,4 @@ if __name__=="__main__":
 
     fig.subplots_adjust(bottom = 0.08,top = 0.95,left=0.08,right=0.95)
 
-    fig.savefig(ld.file_savename("N"))
+    fig.savefig(ld.file_savename("N-linlog"))
