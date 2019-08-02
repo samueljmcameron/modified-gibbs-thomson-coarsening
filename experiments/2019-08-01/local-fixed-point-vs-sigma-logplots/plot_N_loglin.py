@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 import seaborn as sns
-sys.path.append('../../2019-07-24/local-fixed-point-vs-sigma_Ravg0/')
+sys.path.append('../../2019-07-24/local-fixed-point-vs-sigma_R0/')
 
 from single_sigma import chi_0
 
@@ -27,7 +27,7 @@ if __name__=="__main__":
     savesuf = ["R_eq","volFrac_0","beta"]
 
 
-    data_path = "../../2019-07-24/local-fixed-point-vs-sigma_Ravg0"
+    data_path = "../../2019-07-24/local-fixed-point-vs-sigma_R0"
 
     loadfilepath = data_path + "/data"
 
@@ -56,7 +56,7 @@ if __name__=="__main__":
 
         for j,sigma in enumerate(sigmas):
 
-            scan['sigma_Ravg0'] = str(sigma)
+            scan['sigma_R0'] = str(sigma)
         
             rp = ReadParams(scan=scan,datfile=datfile)
 

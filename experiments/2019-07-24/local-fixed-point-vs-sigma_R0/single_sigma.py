@@ -30,7 +30,7 @@ if __name__=="__main__":
 
     sigma = sigmas[int(sys.argv[2])]
 
-    scan['sigma_Ravg0'] = str(sigma)
+    scan['sigma_R0'] = str(sigma)
 
     run = OneRun(scan=scan)
 

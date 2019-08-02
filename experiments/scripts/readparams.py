@@ -4,9 +4,9 @@ import numpy as np
 class ReadParams(object):
 
     def __init__(self,datfile="data/input.dat",scan={},
-                 loadsuf=["R_avg0","sigma_Ravg0","R_eq","volFrac_0","beta",
+                 loadsuf=["R_avg0","sigma_R0","R_eq","volFrac_0","beta",
                           "chi_0","N","dt_max","t_final","t_intervals"],
-                 savesuf=["R_avg0","sigma_Ravg0","R_eq","volFrac_0","beta",
+                 savesuf=["R_avg0","sigma_R0","R_eq","volFrac_0","beta",
                           "chi_0","N","dt_max","t_final","t_intervals"]):
 
         self.datfile = datfile

@@ -33,7 +33,6 @@ if __name__=="__main__":
 
     scan = {}
 
-
     markers = ["o-","v-","^-","<-",">-"]
 
     for i,R_avg0 in enumerate(R_avg0s):
@@ -46,13 +45,13 @@ if __name__=="__main__":
 
         for j,sigma in enumerate(sigmas):
 
-            scan['sigma_Ravg0'] = str(sigma)
+            scan['sigma_R0'] = str(sigma)
         
             rp = ReadParams(scan=scan)
 
             ts = rp.list_of_t_vals()
 
-            Ns = np.empty([len(ts)],float)
+            sigma_Rts = np.empty([len(ts)],float)
 
 
             for i_t,t in enumerate(ts):
@@ -61,9 +60,9 @@ if __name__=="__main__":
                 
                 Rs = ld.data[:,1]
 
-                Ns[i_t] = Rs.size
+                sigma_Rts[i_t] = Rs.std()
 
-            axarr.flat[i].plot(ts,Ns,markers[j],color=colors[j],
+            axarr.flat[i].plot(ts,sigma_Rts,markers[j],color=colors[j],
                                label=rf"$\sigma=\num{{{sigma:.0e}}}$")            
 
 
@@ -72,7 +71,7 @@ if __name__=="__main__":
             axarr.flat[i].set_title(rf"$<\,R\,>(t=0)={R_avg0:.1f}$")
 
         axarr.flat[i].set_xlabel(r"$t$")
-        axarr.flat[i].set_ylabel(r"$N(t)$")
+        axarr.flat[i].set_ylabel(r"$\sigma(t)$")
 
     axarr.flat[i].legend(frameon=False,handlelength=5)
 
@@ -81,4 +80,4 @@ if __name__=="__main__":
 
     fig.subplots_adjust(bottom = 0.08,top = 0.95,left=0.08,right=0.95)
 
-    fig.savefig(ld.file_savename("N"))
+    fig.savefig(ld.file_savename("sigma_R"))

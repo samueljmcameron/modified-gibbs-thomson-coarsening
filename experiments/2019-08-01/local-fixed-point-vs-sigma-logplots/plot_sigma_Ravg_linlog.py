@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 import seaborn as sns
-sys.path.append('../../2019-07-24/local-fixed-point-vs-sigma_Ravg0/')
+sys.path.append('../../2019-07-24/local-fixed-point-vs-sigma_R0/')
 
 from single_sigma import chi_0
 
@@ -25,7 +25,7 @@ if __name__=="__main__":
 
     savesuf = ["R_eq","volFrac_0","beta"]
 
-    data_path = "../../2019-07-24/local-fixed-point-vs-sigma_Ravg0"
+    data_path = "../../2019-07-24/local-fixed-point-vs-sigma_R0"
 
     loadfilepath = data_path + "/data"
 
@@ -53,13 +53,13 @@ if __name__=="__main__":
 
         for j,sigma in enumerate(sigmas):
 
-            scan['sigma_Ravg0'] = str(sigma)
+            scan['sigma_R0'] = str(sigma)
         
             rp = ReadParams(scan=scan,datfile=datfile)
 
             ts = rp.list_of_t_vals()
 
-            sigma_Ravgts = np.empty([len(ts)],float)
+            sigma_Rts = np.empty([len(ts)],float)
 
 
             for i_t,t in enumerate(ts):
@@ -69,9 +69,9 @@ if __name__=="__main__":
                 
                 Rs = ld.data[:,1]
 
-                sigma_Ravgts[i_t] = Rs.std()
+                sigma_Rts[i_t] = Rs.std()
 
-            axarr.flat[i].plot(ts,sigma_Ravgts,markers[j],color=colors[j],
+            axarr.flat[i].plot(ts,sigma_Rts,markers[j],color=colors[j],
                                label=rf"$\sigma=\num{{{sigma:.0e}}}$")            
 
 
@@ -90,4 +90,4 @@ if __name__=="__main__":
 
     fig.subplots_adjust(bottom = 0.08,top = 0.95,left=0.08,right=0.95)
 
-    fig.savefig(ld.file_savename("sigma_Ravg-linlog"))
+    fig.savefig(ld.file_savename("sigma_R-linlog"))

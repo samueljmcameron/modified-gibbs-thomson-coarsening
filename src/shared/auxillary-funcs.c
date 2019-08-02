@@ -139,7 +139,7 @@ void set_params(char **args,struct params *p)
   void print_params(struct params *p);
 
   sscanf(args[2],"%lf",&p->R_avg0);
-  sscanf(args[3],"%lf",&p->sigma_Ravg0);
+  sscanf(args[3],"%lf",&p->sigma_R0);
   sscanf(args[4],"%lf",&p->R_eq);
   sscanf(args[5],"%lf",&p->volFrac_0);
   sscanf(args[6],"%lf",&p->beta);
@@ -159,7 +159,7 @@ void print_params(struct params *p)
 {
   
   printf("R_avg0=%e\n",p->R_avg0);
-  printf("sigma_Ravg0=%e\n",p->sigma_Ravg0);
+  printf("sigma_R0=%e\n",p->sigma_R0);
   printf("R_eq=%e\n",p->R_eq);
   printf("volFrac_0=%e\n",p->volFrac_0);
   printf("beta=%e\n",p->beta);
@@ -183,12 +183,12 @@ void initialize_file(FILE **output,char *path,char *fname,struct params p,
   if (overlap) {
 
     snprintf(suffix,sizeof(suffix),"%1.4e_%1.4e_%1.4e_%1.4e_%1.4e_"
-	     "%1.4e-overlap.txt",p.R_avg0,p.sigma_Ravg0,p.R_eq,
+	     "%1.4e-overlap.txt",p.R_avg0,p.sigma_R0,p.R_eq,
 	     p.volFrac_0,p.beta,p.chi_0);
   } else {
 
     snprintf(suffix,sizeof(suffix),"%1.4e_%1.4e_%1.4e_%1.4e_%1.4e_"
-	     "%1.4e.txt",p.R_avg0,p.sigma_Ravg0,p.R_eq,
+	     "%1.4e.txt",p.R_avg0,p.sigma_R0,p.R_eq,
 	     p.volFrac_0,p.beta,p.chi_0);
 
   }

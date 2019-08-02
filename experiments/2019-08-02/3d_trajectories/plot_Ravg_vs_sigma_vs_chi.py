@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 import sys
 import seaborn as sns
 
@@ -13,11 +14,13 @@ from fig_settings import fig_settings
 from loaddata import LoadData
 from readparams import ReadParams
 
+
 if __name__=="__main__":
 
 
     fig_settings()
 
+    i_s = int(sys.argv[1])
 
     width = 16
     height = 10
@@ -35,11 +38,21 @@ if __name__=="__main__":
     
     R_avg0s = np.linspace(5,12,num=8,endpoint=True)
 
-    sigmas = np.array([0,0.001,0.01,0.1,1.0],float)
+    sigmas = np.array([np.array([0,0.001,0.01,0.1,1.0],float)[i_s]],float)
 
-    fig, axarr = plt.subplots(2,4)
+    #fig, axarr = plt.subplots(2,4)
 
-    fig.set_size_inches(width,height)
+    #fig.set_size_inches(width,height)
+
+    fig = plt.figure()
+
+    ax = fig.add_subplot(111,projection='3d')
+
+    Rs = np.linspace(4,13,num=100,endpoint=True)
+
+    ax.plot(Rs,0*np.ones(len(Rs)),chi_0(Rs),'k-')
+
+
 
     scan = {}
 
@@ -63,6 +76,7 @@ if __name__=="__main__":
             ts = rp.list_of_t_vals()
 
             R_avgts = np.empty([len(ts)],float)
+            sigma_Rts = np.empty([len(ts)],float)
 
             chi_spaced = np.empty([len(ts)],float)
             
@@ -81,28 +95,30 @@ if __name__=="__main__":
                 Rs = ld.data[:,1]
 
                 R_avgts[i_t] = Rs.mean()
+
+                sigma_Rts[i_t] = Rs.std()
                 
                 chi_spaced[i_t] = chis[t_smalls<=t][-1]
 
 
-
-            axarr.flat[i].plot(chi_spaced,R_avgts,markers[j],color=colors[j],
-                               label=rf"$\sigma=\num{{{sigma:.0e}}}$")            
+            label = rf"$<\,R\,>(t=0)={R_avg0:.1f}$"
 
 
+            ax.plot(R_avgts,sigma_Rts-sigma,chi_spaced,lw=4,color=colors[i],
+                    label = label)
 
-    
-            axarr.flat[i].set_title(rf"$<\,R\,>(t=0)={R_avg0:.1f}$")            
-
-        axarr.flat[i].set_xlabel(r"$\chi(t)$")
-        axarr.flat[i].set_ylabel(r"$<R>(t)$")
+    ax.set_title(rf"$\sigma=\num{{{sigma:.0e}}}$")
 
 
-    axarr.flat[i].legend(frameon=False,handlelength=5)
+    ax.set_xlabel(r"$<R>(t)$")
+    ax.set_ylabel(r"$\sigma(t)-\sigma(0)$")
+    ax.set_zlabel(r"$\chi(t)$")
 
-    #    for ax in axarr.flat:
-    #        ax.label_outer()
+    ax.legend(frameon=False,handlelength=5)
+
+    ax.view_init(45,-45)
+
 
     fig.subplots_adjust(bottom = 0.08,top = 0.95,left=0.08,right=0.95)
 
-    fig.savefig(ld.file_savename("R_avg-vs-chi"))
+    fig.savefig(ld.file_savename(f"R_avg-vs-sigma-vs-chi-sigma0is{sigma}"))

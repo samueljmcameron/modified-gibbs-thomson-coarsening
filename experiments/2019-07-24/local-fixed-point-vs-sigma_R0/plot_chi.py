@@ -42,7 +42,7 @@ if __name__=="__main__":
 
         for j,sigma in enumerate(sigmas):
 
-            scan['sigma_Ravg0'] = str(sigma)
+            scan['sigma_R0'] = str(sigma)
         
             ld = LoadData(scan = scan,savesuf=savesuf)
 

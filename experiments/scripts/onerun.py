@@ -19,9 +19,9 @@ class OneRun(ReadParams):
     
     def __init__(self,tmp_path="../../../tmp_data/",scan={},
                  datfile="data/input.dat",
-                 loadsuf=["R_avg0","sigma_Ravg0","R_eq","volFrac_0","beta",
+                 loadsuf=["R_avg0","sigma_R0","R_eq","volFrac_0","beta",
                           "chi_0"],
-                 savesuf=["R_avg0","sigma_Ravg0","R_eq","volFrac_0","beta",
+                 savesuf=["R_avg0","sigma_R0","R_eq","volFrac_0","beta",
                           "chi_0"],
                  executable="../../../bin/3d-gaussian-ic"):
 

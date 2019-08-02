@@ -29,6 +29,9 @@ int main(int argc, char **argv)
 
   void gaussian_distribution(double *R, double R_avg, double sigma_R,int N,gsl_rng *RNG);
 
+  void compute_basic_stats(double *R_avg,double *sigma_R,double *R, int N);
+
+
   void generateBasis(double *basis_matrix,double *R,double L_sys, double buffer, int N,
 		     gsl_rng *RNG);
 
@@ -121,7 +124,6 @@ int main(int argc, char **argv)
   allocate_vectors(p.N,p.t_intervals,&R,&R_last,&c,&B,&workingVector,
 		   &coeff_matrix,&copy,&basis_matrix,&tvals);
 
-  build_tvals(tvals,p.t_final,p.t_intervals); // list of times to save R distribution
 
 
   // structures for linear algebra stuff.
@@ -149,20 +151,22 @@ int main(int argc, char **argv)
   set_matrices(coeff_matrix,copy,basis_matrix,R,L_sys,p.N);
 
 
-  FILE *chi_file;                 // supersaturation data
+  FILE *single_chi_file;                 // supersaturation data
 
-
-  int jset = 0;                     // number of R_files which have already been saved
 
   double t=0,dt=0;                  // time, dt, max allowed dt, time, final time
-  double save_time=tvals[0];        // last time at which the R_files were saved.
   int overlap = false;              // whether droplets are overlapping or not
 
 
 
-  initialize_file(&chi_file,argv[1],"chi_vs_t",p,overlap);
+  initialize_file(&single_chi_file,argv[1],"scanning",p,overlap);
 
-  fprintf(chi_file,"%.12e\t%.12e\n",t,chi);
+  fprintf(single_chi_file,"# R(0), sigma(0), R(inf), sigma(inf), N(inf),"
+	  " chi(inf)\n");
+
+  double R_avg0, sigma_R0;
+
+  compute_basic_stats(&R_avg0,&sigma_R0,R,p.N);
 
 
   // Rs, matrix, and chi are all initialized. Time to run simulation! //
@@ -196,18 +200,8 @@ int main(int argc, char **argv)
     dt = dtChoose(R,B,p.dt_max,&drop_removed_index,n);
 
     updateRadius_and_chi(R,R_last,B,dt,&chi,alpha,p.beta,L_sys,drop_removed_index,n);
-    fprintf(chi_file,"%.12e\t%.12e\n",t,chi);
 
-    // save initial R distribution
-    if (t == 0) {
 
-      save_Rdistribution(argv[1],jset,R,R_last,dt,n,overlap,p);
-
-      save_basis(argv[1],jset,basis_matrix,L_sys,n,overlap,p);
-
-      jset += 1;
-      save_time = tvals[jset];
-    }
     t += dt;
 
     // next IF statement only executed if dt is such that a radius has shrunk. //
@@ -222,38 +216,44 @@ int main(int argc, char **argv)
       }
     }
 
-    if (t > save_time) {
+    if (fabs(t-p.t_final*0.9)<p.dt_max) {
+
+      double chi_near_final = chi;
+      int N_near_final = n;
+
+      double R_avg_near_final;
+      double sigma_R_near_final;
+
+      compute_basic_stats(&R_avg_near_final,&sigma_R_near_final,R,n);
+
+      fprintf(single_chi_file,"%e\t%e\t%e\t%e\t%d\t%e\n",R_avg0,sigma_R0,R_avg_near_final,
+	      sigma_R_near_final,N_near_final,chi_near_final);
 
 
-
-      //if (change_in_alpha(totalVolume(R,n),chi,alpha,p.beta,L_sys) != 0) {
-      //printf("not zero!\n");
-      //}
-
-      if (!overlap) {
-	printf("checking for overlap...\n");
-	overlap = overlapping(basis_matrix,R,L_sys,n);
-      }
-      // save when t reaches save_time
-
-
-      save_Rdistribution(argv[1],jset,R,R_last,dt,n,overlap,p);
-
-      save_basis(argv[1],jset,basis_matrix,L_sys,n,overlap,p);
-
-      jset += 1;
-
-      if (jset == p.t_intervals) save_time = 1e30;
-      else save_time = tvals[jset];
     }
 
   }
   
   // save the final configuration //
 
-  save_Rdistribution(argv[1],jset,R,R_last,dt,n,overlap,p);
+  printf("checking for overlap...\n");
+  overlap = overlapping(basis_matrix,R,L_sys,n);
 
-  save_basis(argv[1],jset,basis_matrix,L_sys,n,overlap,p);
+  fprintf(single_chi_file,"%e\t%e\t",R_avg0,sigma_R0);
+
+  double R_avg;
+
+  double sigma_R;
+
+  compute_basic_stats(&R_avg,&sigma_R,R,n);
+
+  fprintf(single_chi_file,"%e\t%e\t%d\t%e\n",R_avg,sigma_R,n,chi);
+
+  if (overlap) {
+
+    fprintf(single_chi_file,"# droplets are overlapping!\n");
+
+  }
 
   clock_t end2 = clock();
   
@@ -265,9 +265,52 @@ int main(int argc, char **argv)
 
   free_vectors(&R,&R_last,&c,&B,&workingVector,&coeff_matrix,&copy,&basis_matrix,&tvals);
 
-  fclose(chi_file);
+  fclose(single_chi_file);
   
   gsl_permutation_free(perm);
   gsl_rng_free(RNG);
   return 0;
+}
+
+void compute_basic_stats(double *R_avg,double *sigma_R,double *R, int N)
+{
+
+  double average_R(double *R, int N);
+
+  double std_R(double *R,double R_avg,int N);
+
+  *R_avg = average_R(R,N);
+
+  *sigma_R = std_R(R,*R_avg,N);
+
+  return;
+
+}
+
+
+double average_R(double *R, int N)
+{
+
+  double sum = 0.0;
+
+  for (int i = 0; i < N; i++) {
+    sum += R[i];
+  }
+
+  return sum/N;
+}
+
+double std_R(double *R,double R_avg,int N)
+{
+
+  double sum = 0.0;
+
+  for (int i = 0; i < N; i++) {
+    
+    sum += (R[i]-R_avg)*(R[i]-R_avg);
+
+  }
+
+  return sqrt(sum/(N-1));
+
 }

@@ -6,20 +6,20 @@
 
 #define MCHN_ERR 1e-15
 
-void gaussian_distribution(double *R, double R_avg, double sigma_Ravg,int N,gsl_rng *RNG)
+void gaussian_distribution(double *R, double R_avg, double sigma_R,int N,gsl_rng *RNG)
 {
 
   void delta_distribution(double *R,double R_avg,int N);
 
-  if (fabs(sigma_Ravg)<MCHN_ERR) {
+  if (fabs(sigma_R)<MCHN_ERR) {
 
     delta_distribution(R,R_avg,N);
 
   } else {
   
     for (int i = 0; i < N; i++) {
-      R[i] = gsl_ran_gaussian(RNG,sigma_Ravg)+R_avg;
-      while (R[i] <= 0) R[i] = gsl_ran_gaussian(RNG,sigma_Ravg)+R_avg;
+      R[i] = gsl_ran_gaussian(RNG,sigma_R)+R_avg;
+      while (R[i] <= 0) R[i] = gsl_ran_gaussian(RNG,sigma_R)+R_avg;
     }
     
   }

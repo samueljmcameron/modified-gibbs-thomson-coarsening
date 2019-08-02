@@ -19,9 +19,9 @@ class LoadData(ReadParams):
     
     def __init__(self,scan={},
                  datfile="data/input.dat",
-                 loadsuf=["R_avg0","sigma_Ravg0","R_eq","volFrac_0","beta",
+                 loadsuf=["R_avg0","sigma_R0","R_eq","volFrac_0","beta",
                           "chi_0"],
-                 savesuf=["R_avg0","sigma_Ravg0","R_eq","volFrac_0","beta",
+                 savesuf=["R_avg0","sigma_R0","R_eq","volFrac_0","beta",
                           "chi_0"],
                  name="chi_vs_t",loadfilepath="data",savefilepath="results"):
 
@@ -64,3 +64,56 @@ class LoadData(ReadParams):
 
         return f"{self.savefilepath}/{varname}_{suffix}.{file_format}"
 
+    def remove_file(self,overlap=False):
+
+        os.remove(self.file_name(overlap=overlap))
+
+        return
+
+    def read_header(self,overlap=False):
+
+        with open(self.file_name(overlap=overlap)) as f:
+            first_line = f.readline()
+
+        return first_line
+
+
+
+
+
+def sort_R_avg0_vs_chi_0_data(R_avg0s,scan={},savesuf=["R_eq","volFrac_0","beta","chi_0"]):
+
+    # create new array to store all of the (maybe) converged data
+
+    new_data = np.empty([len(R_avg0s),7],float)
+
+    for i,R_avg in enumerate(R_avg0s):
+
+        scan['R_avg0'] = str(R_avg)
+
+        ld = LoadData(name="scanning",scan=scan,savefilepath="data",savesuf=savesuf)
+
+        if i == 0:
+
+            header = ld.read_header()
+
+        almost_time = ld.data[-2,:]
+
+        time = ld.data[-1,:]
+
+        if np.any(np.abs(almost_time-time)>1e-15):
+
+            converged = False
+
+        else:
+
+            converged = True
+
+            ld.remove_file()
+
+
+        new_data[i,:] = np.concatenate((time,[converged]))
+
+    np.savetxt(ld.file_savename("scanning",file_format="txt"),new_data,fmt="%e",header=header)
+
+    return

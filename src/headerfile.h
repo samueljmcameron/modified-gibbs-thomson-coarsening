@@ -13,7 +13,7 @@
 struct params{
 
   double R_avg0;
-  double sigma_Ravg0;
+  double sigma_R0;
   double R_eq;
   double volFrac_0;
   double beta;
@@ -37,7 +37,7 @@ void allocate_vectors(int N,int t_intervals,double **R,double **R_last,double **
 
 void build_tvals(double *tvals, double t_final,int t_intervals);
 
-void gaussian_distribution(double *R, double R_avg, double sigma_Ravg,int N,gsl_rng *RNG);
+void gaussian_distribution(double *R, double R_avg, double sigma_R,int N,gsl_rng *RNG);
 
 
 void generateBasis(double *basis_matrix,double *R,double L_sys, double buffer, int N,
