@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --time=01:00:00
+#SBATCH --time=00:10:00
 #SBATCH --account=def-arutenbe
 
 module restore standard_modules

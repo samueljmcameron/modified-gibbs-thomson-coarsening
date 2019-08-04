@@ -25,6 +25,6 @@ if __name__=="__main__":
 
     scan['sigma_R0'] = str(sigma)
 
-    scan['chi_0'] = str(chi)
+    scan['chi_0'] = str(chi_0)
 
     sort_R_avg0_vs_chi_0_data(R_avg0s,scan=scan,savesuf = ["R_eq","volFrac_0","beta","chi_0"])
