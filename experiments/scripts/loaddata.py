@@ -39,6 +39,7 @@ class LoadData(ReadParams):
             print(f"Found file {self.file_name()}, but drops are overlapping!")
             self.overlap=True
         else:
+            self.data = None
             print(f"Could not find file {self.file_name()}")
             self.overlap=False
 
@@ -93,36 +94,48 @@ def sort_R_avg0_vs_chi_0_data(R_avg0s,scan={},savesuf=["R_eq","volFrac_0","beta"
 
         ld = LoadData(name="scanning",scan=scan,savefilepath="data",savesuf=savesuf)
 
-        if i == 0:
+        if ld.data is None:
 
-            header = ld.read_header()
+            print("skipping!")
 
-        if ld.data.ndim == 1:
+            dum = np.array([0]*6,float)/0.0
 
-            print("potentially didn't converge, not enough data to tell!")
+            convergence_flag = 3
 
-            time = ld.data
-
-            convergence_flag = 2
+            new_data[i,:] = np.concatenate((dum,[convergence_flag]))
 
         else:
 
-            almost_time = ld.data[-2,:]
+            if i == 0:
 
-            time = ld.data[-1,:]
+                header = ld.read_header()
 
-            if np.any(np.abs(almost_time-time)>1e-15):
+            if ld.data.ndim == 1:
 
-                convergence_flag = 1
+                print("potentially didn't converge, not enough data to tell!")
+
+                time = ld.data
+
+                convergence_flag = 2
 
             else:
 
-                convergence_flag = 0
+                almost_time = ld.data[-2,:]
 
-                ld.remove_file()
+                time = ld.data[-1,:]
+
+                if np.any(np.abs(almost_time-time)>1e-15):
+
+                    convergence_flag = 1
+
+                else:
+
+                    convergence_flag = 0
+
+                    ld.remove_file()
 
 
-        new_data[i,:] = np.concatenate((time,[convergence_flag]))
+            new_data[i,:] = np.concatenate((time,[convergence_flag]))
 
     np.savetxt(ld.file_savename("scanning",file_format="txt"),new_data,
                fmt="%e\t%e\t%e\t%e\t%e\t%e\t%d",header=header)
