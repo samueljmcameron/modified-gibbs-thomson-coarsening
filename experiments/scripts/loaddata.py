@@ -97,23 +97,34 @@ def sort_R_avg0_vs_chi_0_data(R_avg0s,scan={},savesuf=["R_eq","volFrac_0","beta"
 
             header = ld.read_header()
 
-        almost_time = ld.data[-2,:]
+        if ld.data.ndim == 1:
 
-        time = ld.data[-1,:]
+            print("potentially didn't converge, not enough data to tell!")
 
-        if np.any(np.abs(almost_time-time)>1e-15):
+            time = ld.data
 
-            converged = False
+            convergence_flag = 2
 
         else:
 
-            converged = True
+            almost_time = ld.data[-2,:]
 
-            ld.remove_file()
+            time = ld.data[-1,:]
+
+            if np.any(np.abs(almost_time-time)>1e-15):
+
+                convergence_flag = 1
+
+            else:
+
+                convergence_flag = 0
+
+                ld.remove_file()
 
 
-        new_data[i,:] = np.concatenate((time,[converged]))
+        new_data[i,:] = np.concatenate((time,[convergence_flag]))
 
-    np.savetxt(ld.file_savename("scanning",file_format="txt"),new_data,fmt="%e",header=header)
+    np.savetxt(ld.file_savename("scanning",file_format="txt"),new_data,
+               fmt="%e\t%e\t%e\t%e\t%e\t%e\t%d",header=header)
 
     return
