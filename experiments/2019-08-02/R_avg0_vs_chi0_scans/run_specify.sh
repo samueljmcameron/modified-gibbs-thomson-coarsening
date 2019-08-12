@@ -5,4 +5,4 @@
 
 module restore standard_modules
 
-python single_sigma.py $1 $2
+python single_sigma_specify_chi_and_R0.py $1 $2
