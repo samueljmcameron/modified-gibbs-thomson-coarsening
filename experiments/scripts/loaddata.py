@@ -80,8 +80,6 @@ class LoadData(ReadParams):
 
 
 
-
-
 def sort_R_avg0_vs_chi_0_data(R_avg0s,scan={},savesuf=["R_eq","volFrac_0","beta","chi_0"]):
 
     # create new array to store all of the (maybe) converged data
@@ -139,5 +137,25 @@ def sort_R_avg0_vs_chi_0_data(R_avg0s,scan={},savesuf=["R_eq","volFrac_0","beta"
 
     np.savetxt(ld.file_savename("scanning",file_format="txt"),new_data,
                fmt="%e\t%e\t%e\t%e\t%e\t%e\t%d",header=header)
+
+    return
+
+def tmp_rename_data(chi0s,scan={},loadsuf=["R_eq","volFrac_0","beta","chi_0"],
+                    savesuf=["sigma_R0","R_eq","volFrac_0","beta","chi_0"],
+                    datfile="data_formatted/input.dat",savefilepath="data_formatted",loadfilepath="data_formatted"):
+
+
+
+    for i,chi0 in enumerate(chi0s):
+
+        scan['chi_0'] = str(chi0)
+
+        ld = LoadData(name="scanning",scan=scan,savefilepath=savefilepath,loadsuf=loadsuf,
+                      savesuf=savesuf,datfile=datfile,loadfilepath=loadfilepath)
+
+        header = ld.read_header()
+
+        np.savetxt(ld.file_savename("scanning",file_format="txt"),ld.data,
+                   fmt="%e\t%e\t%e\t%e\t%d\t%e\t%d",header=header)
 
     return

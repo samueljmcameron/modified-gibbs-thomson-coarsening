@@ -13,7 +13,7 @@ if __name__=="__main__":
 
     sigma = 0.01
 
-    savesuf = ["R_eq","volFrac_0","beta","chi_0"]
+    savesuf = ["sigma_R0","R_eq","volFrac_0","beta","chi_0"]
 
     R_avg0s = np.linspace(4,12,num=33,endpoint=True)
 
@@ -27,4 +27,4 @@ if __name__=="__main__":
 
     scan['chi_0'] = str(chi_0)
 
-    sort_R_avg0_vs_chi_0_data(R_avg0s,scan=scan,savesuf = ["R_eq","volFrac_0","beta","chi_0"])
+    sort_R_avg0_vs_chi_0_data(R_avg0s,scan=scan,savesuf=savesuf)
