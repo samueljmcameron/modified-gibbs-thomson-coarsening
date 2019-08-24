@@ -1,0 +1,1 @@
+For all of these experiments, I'm going to look at the grid of R(0) = 4,6,8,10,12 and chi(0) = -10,-5,0,5,10,15,20,25.
