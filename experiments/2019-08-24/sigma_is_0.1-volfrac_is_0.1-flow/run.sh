@@ -6,4 +6,4 @@
 
 module restore standard_modules
 
-python single-sigma.py $1 $SLURM_ARRAY_TASK_ID
+python single_sigma.py $1 $SLURM_ARRAY_TASK_ID
