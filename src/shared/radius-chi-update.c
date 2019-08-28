@@ -42,7 +42,7 @@ double dtChoose(double *R, double *B,double dt_max, int *k,int n)
     i+= 1;
     if (i == n+1) {
       *k = 2*n;
-      printf("k = %d\n n = %d\n",*k,n);
+      //printf("k = %d\n n = %d\n",*k,n);
       return dt_max;
     }
   }

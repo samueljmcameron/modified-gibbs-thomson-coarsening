@@ -4,6 +4,114 @@
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_randist.h>
 
+void generateCubicBasis(double *basis_matrix,double *R,double L_sys,int N)
+{
+
+  bool checkOverlap(double *basis_matrix,int i1, int i2,double *R,
+		    double L_sys,double buffer);
+  
+  double s0 = 0.0;
+  double sf = 0.9;
+
+  int Ncbrt = round(cbrt(N));
+
+  if (Ncbrt*Ncbrt*Ncbrt != N) {
+    printf("need a droplet number that has integer cube root!");
+    exit(1);
+  }
+  
+  double sh = (sf-s0)/(Ncbrt-1);
+
+  for (int i = 0, num = 0; i < Ncbrt; i ++) {
+
+    for (int j = 0; j < Ncbrt; j ++ ) {
+
+      for (int k = 0; k < Ncbrt; k ++ ) {
+
+	basis_matrix[num*3] = i*sh;
+	basis_matrix[num*3+1] = j*sh;
+	basis_matrix[num*3+2] = k*sh;
+
+	for (int n = 0; n < num; n++) {
+	  if (checkOverlap(basis_matrix,num,n,R,L_sys,1.0)) {
+	    printf("overlapping at R[%d] = %e, R[%d] = %e!\n",num,R[num],
+		   n,R[n]);
+	  }
+	}
+	
+	num += 1;
+
+      }
+    }
+  }
+  return;
+}
+
+/*
+void generateHexagonalBasis(double *basis_matrix,double *R,double L_sys, double Ravg, int N)
+{
+
+
+  double ae0_x = 1.0;
+  double a0_y = 0.0;
+  double 
+  double a1_x = cos(2*M_PI/3);
+  double a1_y = sin(2*M_PI/3);
+
+  int Ncbrt = round(cbrt(N));
+
+  if (Ncbrt*Ncbrt*Ncbrt != N) {
+    printf("need a droplet number that has integer cube root!");
+    exit(1);
+  }
+
+  double a1x = 1;
+  double a1y = 0;
+  double a1z = 0;
+
+  double a2x = 0.5;
+  double a2y = sqrt(3)/2.0;
+  double a2z = 0;
+
+  double zup = sqrt(2.0/3.0);
+
+  double bx = 0.5;
+  double by = 0.5*sqrt(1.0/3.0);
+  
+  for (int n3 = 0, double cx, double cy,int i = 0; n3 < Ncbrt; n3 ++) {
+
+    if (n3 % 2 != 0) {
+
+      cx = bx;
+      cy = by;
+
+    } else {
+      cx = 0;
+      cy = 0;
+    }
+
+    for (int n2 = 0,int noff; n2 < Ncbrt; n2 ++) {
+
+      noff = (n2-1)/2;
+
+      for (int n1 = -noff; n1 < Ncbrt - noff; n1 ++) {
+
+	basis_matrix[i*3] = n1*a1x+n2*a2x+n3*zup+cx;
+	basis_matrix[i*3+1] = n1*a1y+n2*a2y+n3*zup+cy;
+	basis_matrix[i*3+2] = gsl_rng_uniform(RNG);
+
+	i ++ 1;
+    
+    for (int j = 0; j < i; j++) {
+      if (checkOverlap(basis_matrix,i,j,R,L_sys,buffer)) {
+	i -= 1;
+	break;
+      }
+    }
+  }
+  return;
+}
+*/
 
 void generateBasis(double *basis_matrix,double *R,double L_sys, double buffer, int N,
 		   gsl_rng *RNG)

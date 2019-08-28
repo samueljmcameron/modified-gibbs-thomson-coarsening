@@ -43,6 +43,10 @@ void gaussian_distribution(double *R, double R_avg, double sigma_R,int N,gsl_rng
 void generateBasis(double *basis_matrix,double *R,double L_sys, double buffer, int N,
 		   gsl_rng *RNG);
 
+
+void generateCubicBasis(double *basis_matrix,double *R,double L_sys,int N);
+
+
 double set_L_sys(double init_volFrac, double *R, int n);
 
 void set_matrices(double *coeff_matrix,double *copy,double *basis_matrix,
